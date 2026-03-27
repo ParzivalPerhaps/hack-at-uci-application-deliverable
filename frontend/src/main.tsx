@@ -4,7 +4,9 @@ import App from "./App";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-	<React.StrictMode>
-		<App />
-	</React.StrictMode>
+  <React.StrictMode>
+    <div className="w-screen h-screen bg-[#111111]">
+      <App />
+    </div>
+  </React.StrictMode>,
 );
