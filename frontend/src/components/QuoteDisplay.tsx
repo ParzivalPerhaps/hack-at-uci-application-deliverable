@@ -8,7 +8,7 @@ interface QuoteDisplayProps {
 
 export default function QuoteDisplay({ quote }: QuoteDisplayProps) {
   return (
-    <div className="mb-5">
+    <div className="mb-5 w-fit">
       <p className="font-semibold text-2xl">{quote.message}</p>
       <div className="flex gap-2 mt-1">
         <p className="text-[#111111]/60">{quote.name}</p>

@@ -12,7 +12,7 @@ export default function SectionHeader({
   header,
 }: SectionHeaderProps) {
   return (
-    <>
+    <div className="w-full">
       <div className="flex">
         <h2
           className={`transition-all duration-75 mt-7 ${folded ? "text-4xl" : "text-3xl text-[#111111]/40"}`}
@@ -29,6 +29,6 @@ export default function SectionHeader({
       <div
         className={`h-px ${folded ? "bg-[#111111]/90" : "bg-[#111111]/40"} mt-4 mb-4 w-full`}
       />
-    </>
+    </div>
   );
 }

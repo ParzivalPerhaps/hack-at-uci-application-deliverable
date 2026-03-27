@@ -1,15 +1,35 @@
 import { useState } from "react";
+import { addQuote } from "../lib/api";
 
 interface CreateQuoteMenuProps {
   folded: boolean;
+  onQuoteAdded: (newQuote: { name: string; message: string }) => void;
 }
 
-export default function CreateQuoteMenu({ folded }: CreateQuoteMenuProps) {
+export default function CreateQuoteMenu({
+  folded,
+  onQuoteAdded,
+}: CreateQuoteMenuProps) {
   const [quoteAuthor, setQuoteAuthor] = useState("");
   const [quoteContent, setQuoteContent] = useState("");
 
   return (
     <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+
+        try {
+          const newQuote = await addQuote({
+            message: quoteContent,
+            name: quoteAuthor,
+          });
+
+          onQuoteAdded(newQuote);
+
+          setQuoteAuthor("");
+          setQuoteContent("");
+        } catch (error) {}
+      }}
       className={`overflow-hidden ${folded ? "max-h-0" : "max-h-fit"} transition-max-height duration-100`}
     >
       {/* TODO: implement custom form submission logic to not refresh the page */}

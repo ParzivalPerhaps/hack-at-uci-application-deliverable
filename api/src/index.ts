@@ -1,6 +1,6 @@
 import express, { json } from 'express';
 import * as fs from 'fs';
-import { readFileSync, truncateSync, writeSync } from 'node:fs';
+import { closeSync, readFileSync, truncateSync, writeSync } from 'node:fs';
 import path from 'node:path';
 import { exit } from 'node:process';
 
@@ -15,7 +15,7 @@ const dataPath = path.join(__dirname, '../data/database.json');
 
 let quotes: Quote[] = [];
 
-const fd = fs.openSync(dataPath, 'r+')
+let fd = fs.openSync(dataPath, 'r+')
 
 try {
   const jsonString = readFileSync(fd, 'utf-8');
@@ -27,16 +27,30 @@ try {
   exit(1);
 }
 
+closeSync(fd)
+
 const addQuote = (quote:Quote):boolean => {
+    fd = fs.openSync(dataPath, 'w')
+    let quoteAdded = false;
+
     try {
         // yes, you could technically truncate and append to the end, I just don't feel like writing it out
-        writeSync(fd, JSON.stringify({quotes}, undefined, 4))
-        quotes.push(quote)
 
+        quotes.push(quote)
+        quoteAdded = true;
+        writeSync(fd, JSON.stringify({quotes}, undefined, 4))
+
+        closeSync(fd)
         return true;
     } catch {
+        if (quoteAdded)
+            quotes.pop()
+
+        closeSync(fd)
         return false
     }
+
+    
 }
 
 const app = express();
@@ -55,7 +69,8 @@ app.post('/quote', (req, res) => {
             return res.status(200).json(q)
         else
             return res.status(500).send("Failed to create quote")
-    } catch {
+    } catch (e) {
+        console.error(e)
         return res.status(500).send("Failed to create quote")
     }
 })

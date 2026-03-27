@@ -1,4 +1,4 @@
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import QuoteDisplay from "./QuoteDisplay";
 import SpinnerIcon from "./icons/SpinnerIcon";
 import { loadQuotes } from "../lib/api";
@@ -10,65 +10,30 @@ interface QuoteGalleryProps {
     message: string;
     time: Date;
   }[];
+  loadingQuotes: boolean;
+  activeTimeRange: number;
+  timeRangeOptions: any[];
+  updateActiveTimeRange: (i: number) => void;
 }
 
-const timeRangeOptions = [
-  {
-    title: "This Week",
-    maxAge: 6.048e8,
-  },
-  {
-    title: "This Month",
-    maxAge: 2.628e9,
-  },
-  {
-    title: "This Year",
-    maxAge: 3.154e10,
-  },
-  {
-    title: "Last 4 Years",
-    maxAge: 3.154e10 * 4,
-  },
-  {
-    title: "All",
-  },
-];
-
-export default function QuoteGallery({ folded }: QuoteGalleryProps) {
-  const [activeTimeRange, setActiveTimeRange] = useState(4);
-  const [loadingQuotes, setLoadingQuotes] = useState(true);
-  const [quotes, setQuotes] = useState<
-    {
-      name: string;
-      message: string;
-      time: Date;
-    }[]
-  >([]);
-
-  async function loadData(timeRangeIndex: number) {
-    try {
-      setLoadingQuotes(true);
-      setQuotes(await loadQuotes(timeRangeOptions[timeRangeIndex].maxAge));
-    } catch (error) {
-    } finally {
-      setLoadingQuotes(false);
-    }
-  }
-
-  useEffect(() => {
-    loadData(activeTimeRange);
-  }, []);
-
+export default function QuoteGallery({
+  folded,
+  quotes,
+  loadingQuotes,
+  activeTimeRange,
+  updateActiveTimeRange,
+  timeRangeOptions,
+}: QuoteGalleryProps) {
   return (
     <div
-      className={`overflow-hidden ${!folded ? "max-h-0" : "max-h-fit"} transition-max-height duration-100`}
+      className={`overflow-hidden max-w-full ${!folded ? "max-h-0" : "max-h-fit"} transition-max-height duration-100`}
     >
-      <div className="flex gap-4 mb-5">
+      <div className="flex flex-wrap gap-4 mb-5">
         {timeRangeOptions.map((r, i) => (
           <div
+            key={"time-range-" + i}
             onClick={() => {
-              setActiveTimeRange(i);
-              loadData(i);
+              updateActiveTimeRange(i);
             }}
             className={`border-1 pl-3 cursor-pointer pr-3 rounded-[5px] hover:bg-[#111111]/1 ${i === activeTimeRange ? "border-[#111111]/90" : "border-[#111111]/30"}`}
           >
@@ -81,10 +46,13 @@ export default function QuoteGallery({ folded }: QuoteGalleryProps) {
         ))}
       </div>
       {loadingQuotes && <SpinnerIcon className="size-10 animate-spin" />}
-      {!loadingQuotes &&
-        quotes.reverse().map((q) => {
-          return <QuoteDisplay quote={q} />;
-        })}
+      {!loadingQuotes && (
+        <div className="min-[950px]:max-h-135 w-full overflow-y-auto overflow-x-hidden pr-5">
+          {quotes.reverse().map((q, i) => {
+            return <QuoteDisplay key={"quote-display-" + i} quote={q} />;
+          })}
+        </div>
+      )}
     </div>
   );
 }
