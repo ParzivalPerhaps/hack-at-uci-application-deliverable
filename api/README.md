@@ -6,4 +6,4 @@ To start the backend:
 
 `cd api`
 `npm i`
-`npm run dev`
+`npm run start`
