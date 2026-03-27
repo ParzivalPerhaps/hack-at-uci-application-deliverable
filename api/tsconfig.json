@@ -5,7 +5,7 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "module": "nodenext",
-    "target": "esnext",
+    "target": "es2020",
     "types": [
       "node"
     ],
@@ -16,7 +16,6 @@
     "exactOptionalPropertyTypes": true,
     "strict": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",

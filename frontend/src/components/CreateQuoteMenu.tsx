@@ -10,13 +10,10 @@ export default function CreateQuoteMenu({ folded }: CreateQuoteMenuProps) {
 
   return (
     <form
-      className={`overflow-hidden ${folded ? "max-h-0" : "max-h-fit"} transition-max-height duration-500`}
+      className={`overflow-hidden ${folded ? "max-h-0" : "max-h-fit"} transition-max-height duration-100`}
     >
       {/* TODO: implement custom form submission logic to not refresh the page */}
-      <label
-        htmlFor="input-name"
-        className="p-1 text-[#111111]/70 block pl-0 peer-focus:text-[#380fde]"
-      >
+      <label htmlFor="input-name" className="p-1 text-[#111111]/70 block pl-0">
         Name
       </label>
       <input
